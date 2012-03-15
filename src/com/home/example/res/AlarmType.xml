@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" 
+"http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="AlarmType">
+
+	<typeAlias alias="alarmtype" type="com.home.example.db.AlarmType" />
+
+	<resultMap id="alarmTypeResult" class="alarmtype">
+			<result property="specificProblem" column="specificProblem"/>
+			<result property="probableCause" column="probableCause"/>
+        	<result property="defaultSeverity" column="defaultSeverity"/>
+			<result property="autoAcknowledged" column="autoAcknowledged"/>
+        	<result property="switchOverUpdate" column="switchOverUpdate"/>
+        	<result property="clearingInfo" column="clearingInfo"/>
+        	<result property="clearingDelay" column="clearingDelay"/>
+        	<result property="informingDelay" column="informingDelay"/>
+        	<result property="timeToLive" column="timeToLive"/>
+        	<result property="alarmText" column="alarmText"/>
+        	<result property="operationInstructions" column="operationInstructions"/>
+        	<result property="probableCauseName" column="probableCauseName"/>
+        	<result property="eventTypeName" column="eventTypeName"/>
+	</resultMap>
+
+	<parameterMap id="alarmTypeParam" class="long">
+		<parameter property="specificProblem"/>
+	</parameterMap>
+
+	<select id="getAlarmType" parameterMap="alarmTypeParam" resultMap="alarmTypeResult">
+		select * from AlarmTypeBean where specificProblem = ?
+	</select>
+	
+	<select id="getAlarmTypeForUpdate" parameterMap="alarmTypeParam" resultMap="alarmTypeResult">
+		select * from AlarmTypeBean where specificProblem = ? for update
+	</select>
+	
+	<select id="getAlarmTypes" resultMap="alarmTypeResult">
+		select * from AlarmTypeBean
+	</select>
+	
+	<update id="updateAlarmType" parameterClass="alarmtype">       
+		
+		update AlarmTypeBean set
+					specificProblem = #specificProblem#,
+					probableCause = #probableCause#,
+					defaultSeverity = #defaultSeverity#,
+					autoAcknowledged = #autoAcknowledged#,
+					switchOverUpdate = #switchOverUpdate#,
+					clearingInfo = #clearingInfo#,
+					clearingDelay = #clearingDelay#,
+					informingDelay = #informingDelay#,
+					timeToLive = #timeToLive#,
+					alarmText = #alarmText#,
+					operationInstructions = #operationInstructions#,
+					probableCauseName = #probableCauseName#,
+					eventTypeName = #eventTypeName#
+					
+				where specificProblem = #specificProblem#
+					
+	</update>
+	
+	<insert id="addAlarmType" parameterClass="alarmtype">       
+		<selectKey resultClass="long" keyProperty="specificProblem">
+            	select #specificProblem#
+        </selectKey>
+	
+		insert into AlarmTypeBean (
+						specificProblem,
+						probableCause,
+						defaultSeverity,
+						autoAcknowledged,
+						switchOverUpdate,
+						clearingInfo,
+						clearingDelay,
+						informingDelay,
+						timeToLive,
+						alarmText,
+						operationInstructions,
+						probableCauseName,
+						eventTypeName)
+					values (
+						#specificProblem#,
+						#probableCause#,
+						#defaultSeverity#,
+						#autoAcknowledged#,
+						#switchOverUpdate#,
+						#clearingInfo#,
+						#clearingDelay#,
+						#informingDelay#,
+						#timeToLive#,
+						#alarmText#,
+						#operationInstructions#,
+						#probableCauseName#,
+						#eventTypeName# )
+					
+	</insert>
+
+	<parameterMap id="restoreAlarmTypeParam" class="Map">
+		<parameter property="sp" jdbcType="INTEGER" javaType="java.lang.Integer" mode="IN"/>
+	</parameterMap>
+	
+	<procedure id="restoreOneAlarmTypeDefault" parameterMap="restoreAlarmTypeParam">
+		{call restoreonealarmtypedefault (?)}
+	</procedure>
+
+</sqlMap>
+

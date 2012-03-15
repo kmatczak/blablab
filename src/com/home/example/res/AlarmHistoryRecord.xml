@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" 
+"http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="AlarmHistoryRecord">
+
+	<typeAlias alias="alarmhistoryrecord" type="com.home.example.db.AlarmHistoryRecord"/>
+	
+	<parameterMap id="alarmHistoryStartTime" class="long">
+		<parameter property="alarmTime"/>
+	</parameterMap>
+	
+	<parameterMap id="alarmHistoryStartId" class="long">
+		<parameter property="notificationId"/>
+	</parameterMap>
+	
+	<resultMap id="alarmHistoryResult" class="alarmhistoryrecord">
+	
+        	<result property="notificationId" column="notificationId"/>
+			<result property="alarmId" column="alarmId"/>
+			<result property="specificProblem" column="specificProblem"/>
+        	<result property="probableCause" column="probableCause"/>
+			<result property="eventTypeName" column="eventTypeName"/>
+        	<result property="extendedEventTypeName" column="extendedEventTypeName"/>
+        	<result property="alarmTime" column="alarmTime"/>
+        	<result property="systemTime" column="systemTime"/>
+        	<result property="originalTime" column="originalTime"/>
+        	<result property="utcShift" column="utcShift"/>
+        	<result property="managedObjectId" column="managedObjectId"/>
+        	<result property="applicationId" column="applicationId"/>
+        	<result property="ackState" column="ackState"/>
+        	<result property="clearState" column="clearState"/>
+        	<result property="perceivedSeverity" column="perceivedSeverity"/>
+        	<result property="IApplAdditionalInfo" column="IApplAdditionalInfo"/>
+        	<result property="applAdditionalInfo" column="applAdditionalInfo"/>
+         	<result property="clearingInfo" column="clearingInfo"/>
+        	<result property="alarmText" column="alarmText"/>
+        	<result property="correlatedNotifications" column="correlatedNotifications"/>
+         	<result property="ackTime" column="ackTime"/>
+        	<result property="userId" column="userId"/>
+         	<result property="systemId" column="systemId"/>
+        	<result property="controlIndicator" column="controlIndicator"/>
+      	      	
+	</resultMap>
+	
+	
+	<insert id="addAlarmHistoryRecord" parameterClass="alarmhistoryrecord">
+		<selectKey resultClass="long" keyProperty="notificationId">  
+    		select #notificationId# 
+        </selectKey>		
+
+		insert into AlarmHistoryRecord (notificationId,
+						alarmId,
+						specificProblem,
+						probableCause,
+						eventTypeName,
+						extendedEventTypeName,
+						alarmTime,
+						systemTime,
+						originalTime,
+						utcShift,
+						managedObjectId,
+						applicationId,
+						ackState,
+						clearState,
+						perceivedSeverity,
+						IApplAdditionalInfo,
+						applAdditionalInfo,
+						clearingInfo,
+						alarmText,
+						correlatedNotifications,
+						ackTime,
+						userId,
+						systemId,
+						controlIndicator)
+					
+					values (#notificationId#,
+						#alarmId#,
+						#specificProblem#,
+						#probableCause#,
+						#eventTypeName#,
+						#extendedEventTypeName#,
+						#alarmTime#,
+						#systemTime#,
+						#originalTime#,
+						#utcShift#,
+						#managedObjectId#,
+						#applicationId#,
+						#ackState#,
+						#clearState#,
+						#perceivedSeverity#,
+						#IApplAdditionalInfo#,
+						#applAdditionalInfo#,
+						#clearingInfo#,
+						#alarmText#,
+						#correlatedNotifications#,
+						#ackTime#,
+						#userId#,
+						#systemId#,
+						#controlIndicator#)
+	</insert>
+
+	<delete id="cleanAlarmHistory">
+        	<![CDATA[ delete from AlarmHistoryRecord where (alarmTime < #startTime# and ExtendedEventTypeName IN ('X1','X2','X4')) or
+        	                               (ackTime < #startTime# and ExtendedEventTypeName IN ('X3'))                 
+        	 ]]>
+    </delete>
+    
+	<select id="getAlarmHistoryRecords" resultMap="alarmHistoryResult">
+		select * from AlarmHistoryRecord
+	</select>
+	
+	<select id="getAlarmHistorySize" resultClass="long">
+		select count(*) from AlarmHistoryRecord
+	</select>
+	
+	<select id="getAlarmHistoryRecordIds" resultClass="long">
+		select notificationId from AlarmHistoryRecord 
+		limit #howMany# offset #fromIndex#
+	</select>
+	
+	<delete id="deleteAlarmHistoryRecords" parameterMap="alarmHistoryStartId">
+		<![CDATA[ delete from AlarmHistoryRecord where notificationId <= ? ]]>
+	</delete>
+	
+	
+</sqlMap>
+
