@@ -1,0 +1,3 @@
+[submodule "scull"]
+	path = scull
+	url = git@github.com:kmatczak/scull.git
